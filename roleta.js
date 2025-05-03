@@ -1,0 +1,53 @@
+
+const jaGirou = localStorage.getItem("girouRoleta");
+const botaoGirar = document.getElementById("botaoGirar");
+
+if (jaGirou === "true") {
+  botaoGirar.disabled = true;
+  botaoGirar.innerText = "Você já girou!";
+}
+
+const roleta = new Winwheel({
+  'canvasId': 'canvas',
+  'numSegments': 6,
+  'segments': [
+    { 'fillStyle': '#eae56f', 'text': '1 mês de parcela paga' },
+    { 'fillStyle': '#89f26e', 'text': 'Vale-compras de R$500' },
+    { 'fillStyle': '#7de6ef', 'text': 'Fogão 4 bocas' },
+    { 'fillStyle': '#e7706f', 'text': 'Churrasqueira portátil' },
+    { 'fillStyle': '#fdd835', 'text': 'Kit casa nova' },
+    { 'fillStyle': '#ab47bc', 'text': 'Vale saúde de R$800 (FacePlace)' }
+  ],
+  'animation': {
+    'type': 'spinToStop',
+    'duration': 5,
+    'spins': 6,
+    'callbackFinished': mostrarPremio
+  }
+});
+
+function girarRoleta() {
+  if (localStorage.getItem("girouRoleta") === "true") {
+    alert("Você já girou uma vez. Tente novamente mais tarde!");
+    return;
+  }
+  roleta.startAnimation();
+  localStorage.setItem("girouRoleta", "true");
+  botaoGirar.disabled = true;
+  botaoGirar.innerText = "Você já girou!";
+}
+
+function mostrarPremio(segmento) {
+  alert("Parabéns! Você ganhou: " + segmento.text);
+}
+
+function enviarFormulario() {
+  const nome = document.getElementById("nome").value;
+  const whatsapp = document.getElementById("whatsapp").value;
+  if (!nome || !whatsapp) {
+    alert("Por favor, preencha todos os campos.");
+    return;
+  }
+  const msg = encodeURIComponent(`Olá, me chamo ${nome} e ganhei um prêmio na roleta. Meu WhatsApp: ${whatsapp}`);
+  window.open(`https://wa.me/5581991189964?text=${msg}`, '_blank');
+}
